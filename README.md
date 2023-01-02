@@ -26,6 +26,7 @@ Currently the frontend has a protected route behind keycloak-auth, inorder to vi
 - go to http://localhost:8080/auth/admin and login using _admin_ as both username and password.
 - create a new realm called _opentelemetry_
 - under the realm create a new client called _react-app_ and add root url as the url of the frontend app in our case, http://localhost:3001/.
+- create a user under the realm and also set the password for that specific user.
 
 ### Run the frontend
 Once both the collector backend and the auth server are ready, now its time to run the frontend. In order run that do the following:
@@ -35,7 +36,7 @@ npm install
 npm run start
 ```
 
-Frontend can be accessed on http://localhost:3001 and click on login.
+Frontend can be accessed on http://localhost:3001 and users can login based on their users information.
 
 Currently, default otel-collector docker service has no auth in place, hence the tracing information can be seen propagating to otel collector and all the way to zipkin backend.
 
