@@ -1,0 +1,35 @@
+extensions:
+  oidc:
+    issuer_url: http://keycloakc:8080/auth/realms/opentelemetry
+    audience: account
+    attribute: authorization
+
+receivers:
+  otlp:
+    protocols:
+      http:
+        include_metadata: true
+        cors:
+          allowed_origins:
+            - http://localhost:3001
+        auth:
+          authenticator: oidc
+
+processors:
+
+exporters:
+  logging:
+    logLevel: debug
+  zipkin:
+    endpoint: "http://zipkinc:9411/api/v2/spans"
+
+service:
+  telemetry:
+    logs:
+      level: debug
+  extensions: [oidc]
+  pipelines:
+    traces/collector:
+      receivers: [otlp]
+      processors: []
+      exporters: [logging, zipkin]

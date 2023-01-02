@@ -1,0 +1,40 @@
+# Collector
+services:
+  keycloak:
+      image: quay.io/keycloak/keycloak:16.1.1
+      container_name: keycloakc
+      ports:
+          - 127.0.0.1:8080:8080
+      environment:
+          - KEYCLOAK_USER=admin
+          - KEYCLOAK_PASSWORD=admin
+
+  zipkin:
+    depends_on:
+        - keycloak
+    image: openzipkin/zipkin
+    container_name: zipkinc
+    ports:
+      - 127.0.0.1:9411:9411
+    
+  otel-collector:
+    depends_on:
+      - keycloak
+      - zipkin
+    image: ghcr.io/open-telemetry/opentelemetry-collector-releases/opentelemetry-collector-contrib:0.68.0
+    container_name: otelc
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - 127.0.0.1:1888:1888   # pprof extension
+      - 127.0.0.1:8888:8888   # Prometheus metrics exposed by the collector
+      - 127.0.0.1:8889:8889   # Prometheus exporter metrics
+      - 127.0.0.1:13133:13133 # health_check extension
+      - 127.0.0.1:4317:4317   # OTLP gRPC receiver
+      - 127.0.0.1:4318:4318  # OTLP http receiver
+      - 127.0.0.1:55679:55679 # zpages extension
+
+  
+    
+

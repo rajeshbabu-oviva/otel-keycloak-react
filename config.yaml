@@ -1,0 +1,29 @@
+extensions:
+
+receivers:
+  otlp:
+    protocols:
+      http:
+        include_metadata: true
+        cors:
+          allowed_origins:
+            - http://localhost:3001
+
+processors:
+
+exporters:
+  logging:
+    logLevel: debug
+  zipkin:
+    endpoint: "http://zipkinc:9411/api/v2/spans"
+
+service:
+  telemetry:
+    logs:
+      level: debug
+  extensions: []
+  pipelines:
+    traces/collector:
+      receivers: [otlp]
+      processors: []
+      exporters: [logging, zipkin]
