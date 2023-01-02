@@ -39,7 +39,7 @@ Frontend can be accessed on http://localhost:3001 and click on login.
 
 Currently, default otel-collector docker service has no auth in place, hence the tracing information can be seen propagating to otel collector and all the way to zipkin backend.
 
-### Run the otel-collector with oidc extension
+### Run the otel-collector with oidc extension (Currently returning 401 UnAuthorized !!!!! )
 Inorder to test the auth extension, we need to replace the collector config with _auth-config.yaml_ and recreate the container again
 
 ```
